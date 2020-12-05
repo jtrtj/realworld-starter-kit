@@ -4,5 +4,7 @@ services:
   api:
     build:
       context: .
+    ports:
+      - '9292:9292'
     volumes:
       - '.:/var/app/'
