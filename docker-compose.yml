@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+    ports:
+      - '9292:9292'
+    volumes:
+      - '.:/var/app/'
+    depends_on:
+      - db
+  db:
+    image: "postgres:13-alpine"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=conduit
+      - POSTGRES_PASSWORD=abc
+    ports:
+      - '5432:5432'
+
+volumes:
+  pg-data:
