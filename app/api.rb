@@ -11,8 +11,10 @@ DB = Sequel.connect(
 )
 
 require_relative 'models/user'
+
 module Conduit
   class API < Grape::API
+    prefix :api
     format :json
 
     namespace 'users' do
