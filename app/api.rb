@@ -1,6 +1,7 @@
 require 'grape'
 require 'sequel'
 require 'pg'
+require_relative 'services/json_web_token'
 
 DB = Sequel.connect(
   adapter: 'postgres',
@@ -20,13 +21,20 @@ module Conduit
     namespace 'users' do
       desc 'Create new user.'
       params do
-        requires :username, type: String
-        requires :email, type: String
-        requires :password, type: String
+        requires :user, type: Hash do
+          requires :username, type: String
+          requires :email, type: String
+          requires :password, type: String
+        end
       end
+
       post do
-        user = User.create(params)
-        user.values
+        response = {}
+        user = User.create(params["user"])
+        token = JsonWebToken.encode(user: user.username)
+        response.merge!(user.values)
+        response[:token] = token
+        response
       end
     end
   end
