@@ -7,7 +7,6 @@ Sequel.migration do
       String :password, null: false
       String :bio
       String :image
-      String :token
     end
   end
 end
