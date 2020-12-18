@@ -1,22 +1,20 @@
 require 'grape'
-require 'sequel'
-require 'pg'
-require_relative 'services/json_web_token'
-
-DB = Sequel.connect(
-  adapter: 'postgres',
-  host: 'db',
-  database: 'conduit',
-  user: 'postgres',
-  password: 'abc'
-)
-
 require_relative 'models/user'
 
 module Conduit
   class API < Grape::API
     prefix :api
     format :json
+
+    helpers do
+      def current_user
+        @current_user ||= User.authorize!(env)
+      end
+
+      def authenticate!
+        error!('401 Unauthorized', 402) unless current_user
+      end
+    end
 
     namespace 'users' do
       desc 'Create a new user.'
@@ -29,11 +27,11 @@ module Conduit
       end
       post do
         response = {}
-        user = User.create(params["user"])
+        user = User.create(params['user'])
         token = JsonWebToken.encode(user_id: user.id)
         response.merge!(user.values)
         response[:token] = token
-        {'user' => response}
+        { 'user' => response }
       end
 
       desc 'Login a user.'
@@ -48,24 +46,19 @@ module Conduit
         user = User.where(
           email: params['user']['email'],
           password: params['user']['password']
-          ).first
+        ).first
         token = JsonWebToken.encode(user_id: user.id)
         response.merge!(user.values)
         response[:token] = token
-        {'user' => response}
+        { 'user' => response }
       end
     end
 
     namespace 'user' do
       desc 'Get current user.'
       get do
-        response = {}
-        token = headers['Authorization'].split[1]
-        decoded_token = JsonWebToken.decode(token)
-        user = User.find(decoded_token[0]['user_id']).first
-        response.merge!(user.values)
-        response[:token] = token
-        {'user' => response}
+        authenticate!
+        @current_user
       end
 
       desc 'Update a user.'
@@ -86,7 +79,7 @@ module Conduit
         user.update(params['user'])
         response.merge!(user.values)
         response[:token] = token
-        {'user' => response}
+        { 'user' => response }
       end
     end
   end
