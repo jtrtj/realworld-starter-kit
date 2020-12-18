@@ -23,7 +23,7 @@ For more information on how to this works with other frontends/backends, head ov
 # Instructions while in developent:
 
 1) `docker-compose build` to build the app, once it's cloned down.
-2) `docker-compose up -d` then `docker-compose run api sequel -m db postgres://postgres:abc@db:5432/conduit` to migrate the database
+2) `docker-compose up -d` then `docker-compose run api sequel -m db/migrations postgres://postgres:abc@db:5432/conduit` to migrate the database
 3) `docker-compose up`
 
 If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls`
