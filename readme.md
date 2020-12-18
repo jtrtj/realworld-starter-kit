@@ -25,11 +25,11 @@ For more information on how to this works with other frontends/backends, head ov
 
 `docker-compose build`
 
-`docker-compose run api sequel -m db postgres://postgres:abc@db:5432/conduit` to migrate the database
+`docker-compose up -d` then `docker-compose run api sequel -m db postgres://postgres:abc@db:5432/conduit` to migrate the database
 
 `docker-compose up`
 
-If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls` 
+If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls`
 
 # To get pry to work
 1) put pry in code where you want it to be
