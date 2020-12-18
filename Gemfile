@@ -10,6 +10,8 @@ gem 'pg' # Database
 gem 'sequel' # Database
 
 group :development, :test do
+  gem 'database_cleaner-sequel'
   gem 'pry'
+  gem 'rack-test'
   gem 'rspec'
 end
