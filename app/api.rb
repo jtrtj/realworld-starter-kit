@@ -59,14 +59,8 @@ module Conduit
         end
       end
       put do
-        response = {}
-        token = headers['Authorization'].split[1]
-        decoded_token = JsonWebToken.decode(token)
-        user = User.find(decoded_token[0]['user_id']).first
-        user.update(params['user'])
-        response.merge!(user.values)
-        response[:token] = token
-        { 'user' => response }
+        authenticate!
+        User.update(@current_user, params)
       end
     end
   end

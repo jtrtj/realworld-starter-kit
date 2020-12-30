@@ -17,6 +17,12 @@ class User < Sequel::Model(Database.instance.conn)
     present_user(user, token)
   end
 
+  def self.update(user, params)
+    found_user = User.find(user[:user][:id]).first
+    found_user.update(params[:user])
+    present_user(found_user, user[:user][:token])
+  end
+
   def self.authorize!(env)
     user_id = decode_user_id(env)
     if user_id.nil?

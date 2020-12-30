@@ -11,7 +11,6 @@ describe User do
       @token = JsonWebToken.encode(user_id: @user.id)
     end
     context '.authorize!' do
-
       it 'Checks if token is valid and returns the User if valid' do
         incoming_env = {
           'HTTP_AUTHORIZATION' => "Token #{@token}"
@@ -26,9 +25,9 @@ describe User do
         initial_user_count = User.count
         params = { user:
                    {
-                     :email => 'cool@guy.org',
-                     :password => 'ssssecret',
-                     :username => 'coolDude'
+                     email: 'cool@guy.org',
+                     password: 'ssssecret',
+                     username: 'coolDude'
                    } }
         new_user = User.create_new(params)
 
@@ -39,17 +38,33 @@ describe User do
       end
     end
     context '.login' do
-      it "Logs in a user and returns its attributes with a new jwt" do
+      it 'Logs in a user and returns its attributes with a new jwt' do
         params = { user:
                    {
-                     :email => @user.email,
-                     :password => @user.password
+                     email: @user.email,
+                     password: @user.password
                    } }
         logged_in_user = User.login(params)
         expect(logged_in_user[:user][:email]).to eq(@user.email)
         expect(logged_in_user[:user][:username]).to eq(@user.username)
         expect(logged_in_user[:user][:token]).to_not be_nil
         expect(logged_in_user[:user][:id]).to eq(@user.id)
+      end
+    end
+
+    context '.update' do
+      it "updates a user's attribute(s) and returns them with request's jwt" do
+        params = {
+          user:
+           {
+             email: 'new@email.address'
+           }
+        }
+
+        user_to_update = User.present_user(@user, @token)
+        User.update(user_to_update, params)
+        updated_user = User.find(@user.id).first
+        expect(updated_user.email).to eq(params[:user][:email])
       end
     end
   end
