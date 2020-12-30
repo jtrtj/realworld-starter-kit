@@ -37,15 +37,7 @@ module Conduit
         end
       end
       post '/login' do
-        response = {}
-        user = User.where(
-          email: params['user']['email'],
-          password: params['user']['password']
-        ).first
-        token = JsonWebToken.encode(user_id: user.id)
-        response.merge!(user.values)
-        response[:token] = token
-        { 'user' => response }
+        User.login(params)
       end
     end
 
