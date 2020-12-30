@@ -8,6 +8,15 @@ class User < Sequel::Model(Database.instance.conn)
     present_user(user, token)
   end
 
+  def self.login(params)
+    user = User.where(
+      email: params[:user][:email],
+      password: params[:user][:password]
+    ).first
+    token = JsonWebToken.encode(user_id: user.id)
+    present_user(user, token)
+  end
+
   def self.authorize!(env)
     user_id = decode_user_id(env)
     if user_id.nil?
@@ -38,6 +47,6 @@ class User < Sequel::Model(Database.instance.conn)
   end
 
   def self.present_user(user, jwt)
-    Hash['user', user.values.merge!(token: jwt)]
+    Hash[:user, user.values.merge!(token: jwt)]
   end
 end
