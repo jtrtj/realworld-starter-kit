@@ -26,12 +26,7 @@ module Conduit
         end
       end
       post do
-        response = {}
-        user = User.create(params['user'])
-        token = JsonWebToken.encode(user_id: user.id)
-        response.merge!(user.values)
-        response[:token] = token
-        { 'user' => response }
+        User.create_new(params)
       end
 
       desc 'Login a user.'

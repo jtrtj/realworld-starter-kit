@@ -2,6 +2,12 @@ require './db/database'
 require './app/services/json_web_token'
 
 class User < Sequel::Model(Database.instance.conn)
+  def self.create_new(params)
+    user = create(params[:user])
+    token = JsonWebToken.encode(user_id: user.id)
+    present_user(user, token)
+  end
+
   def self.authorize!(env)
     user_id = decode_user_id(env)
     if user_id.nil?

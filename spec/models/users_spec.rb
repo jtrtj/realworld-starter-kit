@@ -20,4 +20,15 @@ describe User do
       expect(current_user['user'][:id]).to eq(@user.id)
     end
   end
+  context '.create_new' do
+    it 'Creates a new user and returns its attributes with a new jwt' do
+      params = { "user":
+                 {
+                   "email": 'cool@guy.org',
+                   "password": 'ssssecret',
+                   "username": 'coolDude'
+                 } }
+      actual = User.create_new(params)
+    end
+  end
 end
