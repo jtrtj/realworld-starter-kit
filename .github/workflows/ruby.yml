@@ -21,12 +21,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup ENV
-      run: |
-        cat > .env
-        SECRET_KEY=secret
-        DB_HOST=db
-        DB_NAME=conduit
-        DB_USER=postgres
-        DB_PASSWORD=abc
+        run: |
+          touch .env
+          echo SECRET_KEY=secret >> .env
+          echo DB_HOST=db >> .env
+          echo DB_NAME=conduit >> .env
+          echo DB_USER=postgres >> .env
+          echo DB_PASSWORD=abc >> .env
+          cat .env
     - name: Run tests
       run: docker-compose run api rspec
