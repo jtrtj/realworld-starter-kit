@@ -61,7 +61,7 @@ describe User do
            }
         }
 
-        user_to_update = User.present_user(@user, @token)
+        user_to_update = User::Decorator.new(@user, @token).to_h
         User.update(user_to_update, params)
         updated_user = User.find(@user.id).first
         expect(updated_user.email).to eq(params[:user][:email])
