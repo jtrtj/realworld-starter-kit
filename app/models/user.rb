@@ -18,19 +18,16 @@ class User < Sequel::Model(Database.instance.conn)
   end
 
   def self.update(user, params)
-    found_user = User.find(user[:user][:id]).first
+    found_user = User.find(user.id).first
     found_user.update(params[:user])
-    User::Decorator.new(found_user, user[:user][:token]).to_h
   end
 
-  def self.authorize!(env)
-    token = env['HTTP_AUTHORIZATION'].split[1]
+  def self.authorize!(token)
     decoded_token = JsonWebToken.decode(token)
     if decoded_token.nil?
       nil
     else
-      user = find(decoded_token.user_id).first
-      User::Decorator.new(user, token).to_h
+      find(decoded_token.user_id).first
     end
   end
 
