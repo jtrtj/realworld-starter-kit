@@ -1,5 +1,4 @@
 # ![RealWorld Example App](https://user-images.githubusercontent.com/62079009/102656503-3565d080-4131-11eb-96b1-d7c37e466951.png)
-)
 
 > ### [Grape](https://github.com/ruby-grape/grape) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
@@ -21,9 +20,8 @@ For more information on how to this works with other frontends/backends, head ov
 > npm install, npm start, etc.
 
 # Instructions while in developent:
-
 1) `docker-compose build` to build the app, once it's cloned down.
-2) `docker-compose up -d` then `docker-compose run api sequel -m db postgres://postgres:abc@db:5432/conduit` to migrate the database
+2) `docker-compose up -d` then `docker-compose run api sequel -m db/migrations postgres://postgres:abc@db:5432/conduit` to migrate the database
 3) `docker-compose up`
 
 If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls`

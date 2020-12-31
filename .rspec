@@ -1,1 +1,5 @@
 --require spec_helper
+--require pry
+--color
+-f d
+--order random

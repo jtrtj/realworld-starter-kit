@@ -1,22 +1,25 @@
 require 'grape'
-require 'sequel'
-require 'pg'
-require_relative 'services/json_web_token'
-
-DB = Sequel.connect(
-  adapter: 'postgres',
-  host: 'db',
-  database: 'conduit',
-  user: 'postgres',
-  password: 'abc'
-)
-
 require_relative 'models/user'
+require_relative 'decorators/user'
 
 module Conduit
   class API < Grape::API
     prefix :api
     format :json
+
+    helpers do
+      def current_user
+        @current_user ||= User.authorize!(token)
+      end
+
+      def authenticate!
+        error!('401 Unauthorized', 402) unless current_user
+      end
+
+      def token
+        env['HTTP_AUTHORIZATION'].split[1]
+      end
+    end
 
     namespace 'users' do
       desc 'Create a new user.'
@@ -28,12 +31,7 @@ module Conduit
         end
       end
       post do
-        response = {}
-        user = User.create(params["user"])
-        token = JsonWebToken.encode(user_id: user.id)
-        response.merge!(user.values)
-        response[:token] = token
-        {'user' => response}
+        User.create_new(params)
       end
 
       desc 'Login a user.'
@@ -44,28 +42,15 @@ module Conduit
         end
       end
       post '/login' do
-        response = {}
-        user = User.where(
-          email: params['user']['email'],
-          password: params['user']['password']
-          ).first
-        token = JsonWebToken.encode(user_id: user.id)
-        response.merge!(user.values)
-        response[:token] = token
-        {'user' => response}
+        User.login(params)
       end
     end
 
     namespace 'user' do
       desc 'Get current user.'
       get do
-        response = {}
-        token = headers['Authorization'].split[1]
-        decoded_token = JsonWebToken.decode(token)
-        user = User.find(decoded_token[0]['user_id']).first
-        response.merge!(user.values)
-        response[:token] = token
-        {'user' => response}
+        authenticate!
+        Decorator::User.new(@current_user, token).to_h
       end
 
       desc 'Update a user.'
@@ -79,14 +64,9 @@ module Conduit
         end
       end
       put do
-        response = {}
-        token = headers['Authorization'].split[1]
-        decoded_token = JsonWebToken.decode(token)
-        user = User.find(decoded_token[0]['user_id']).first
-        user.update(params['user'])
-        response.merge!(user.values)
-        response[:token] = token
-        {'user' => response}
+        authenticate!
+        user = User.update(@current_user, params)
+        Decorator::User.new(user, token).to_h
       end
     end
   end
