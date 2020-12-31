@@ -12,12 +12,8 @@ describe User do
     end
     context '.authorize!' do
       it 'Checks if token is valid and returns the User if valid' do
-        incoming_env = {
-          'HTTP_AUTHORIZATION' => "Token #{@token}"
-        }
-
-        current_user = described_class.authorize!(incoming_env)
-        expect(current_user[:user][:id]).to eq(@user.id)
+        current_user = described_class.authorize!(@token)
+        expect(current_user.id).to eq(@user.id)
       end
     end
     context '.create_new' do
@@ -61,8 +57,7 @@ describe User do
            }
         }
 
-        user_to_update = User::Decorator.new(@user, @token).to_h
-        User.update(user_to_update, params)
+        User.update(@user, params)
         updated_user = User.find(@user.id).first
         expect(updated_user.email).to eq(params[:user][:email])
       end
