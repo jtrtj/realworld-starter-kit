@@ -24,32 +24,14 @@ class User < Sequel::Model(Database.instance.conn)
   end
 
   def self.authorize!(env)
-    user_id = decode_user_id(env)
-    if user_id.nil?
+    token = env['HTTP_AUTHORIZATION'].split[1]
+    decoded_token = JsonWebToken.decode(token)
+    if decoded_token.nil?
       nil
     else
-      user = find(user_id).first
-      present_user(user, jwt(env))
+      user = find(decoded_token.user_id).first
+      present_user(user, token)
     end
-  end
-
-  def self.decode_user_id(env)
-    jwt = jwt(env)
-    begin
-      JsonWebToken.decode(jwt)[0]['user_id']
-    rescue JWT::DecodeError
-      nil
-    rescue JWT::ExpiredSignature
-      nil
-    rescue JWT::InvalidIssuerError
-      nil
-    rescue JWT::InvalidIatError
-      nil
-    end
-  end
-
-  def self.jwt(env)
-    env['HTTP_AUTHORIZATION'].split[1]
   end
 
   def self.present_user(user, jwt)
