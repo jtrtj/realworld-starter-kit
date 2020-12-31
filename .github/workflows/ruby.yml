@@ -29,5 +29,7 @@ jobs:
         echo DB_USER=postgres >> .env
         echo DB_PASSWORD=abc >> .env
         cat .env
+    - name: Run migrations
+      run: docker-compose run api sequel -m db/migrations postgres://postgres:abc@db:5432/conduit
     - name: Run tests
       run: docker-compose run api rspec
