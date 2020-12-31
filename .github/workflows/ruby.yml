@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Ruby
+    {# - name: Set up Ruby
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
     # change this to (see https://github.com/ruby/setup-ruby#versioning):
     # uses: ruby/setup-ruby@v1
@@ -28,12 +28,15 @@ jobs:
       with:
         ruby-version: 2.7.1
     - name: Install dependencies
-      run: bundle install
+      run: bundle install #}
+    - name: Setup ENV
+      run: |
+        cat > .env
+        SECRET_KEY=secret
+        DB_HOST=db
+        DB_NAME=conduit
+        DB_USER=postgres
+        DB_PASSWORD=abc
     - name: Run tests
       env:
-        SECRET_KEY: secret
-        DB_HOST: db
-        DB_NAME: conduit
-        DB_USER: postgres
-        DB_PASSWORD: abc
       run: docker-compose run api rspec
