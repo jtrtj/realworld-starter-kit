@@ -32,4 +32,9 @@ jobs:
     - name: Run tests
       env:
         SECRET_KEY: secret
+        DB_HOST: db
+        DB_NAME: conduit
+        DB_USER: postgres
+        DB_PASSWORD: abc
+
       run: bundle exec rspec
