@@ -31,7 +31,3 @@ If a migration is changed, stop the container then delete the volume that it is 
 2) in a second terminal window than the one used to bring the app up, type `docker attach grape-realworld-example-app_api_1`
 3) send the request through Postman once the server is running
 4) you are now in pry in that window
-
-# Extensions/Refactor opportunities:
-1) Token is currently returned to the update function and doesn't need to be. Consider using 'AuthorizedUser' class.
-2) Implement SimpleDelegator class for User::Decorator

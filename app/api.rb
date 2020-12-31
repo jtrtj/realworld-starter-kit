@@ -1,5 +1,6 @@
 require 'grape'
 require_relative 'models/user'
+require_relative 'decorators/user'
 
 module Conduit
   class API < Grape::API
@@ -49,7 +50,7 @@ module Conduit
       desc 'Get current user.'
       get do
         authenticate!
-        User::Decorator.new(@current_user, token).to_h
+        Decorator::User.new(@current_user, token).to_h
       end
 
       desc 'Update a user.'
@@ -65,7 +66,7 @@ module Conduit
       put do
         authenticate!
         user = User.update(@current_user, params)
-        User::Decorator.new(user, token).to_h
+        Decorator::User.new(user, token).to_h
       end
     end
   end
