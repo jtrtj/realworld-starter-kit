@@ -5,7 +5,7 @@ class User < Sequel::Model(Database.instance.conn)
   def self.create_new(params)
     user = create(params[:user])
     token = JsonWebToken.encode(user_id: user.id)
-    present_user(user, token)
+    User::Decorator.new(user, token).to_h
   end
 
   def self.login(params)
@@ -14,13 +14,13 @@ class User < Sequel::Model(Database.instance.conn)
       password: params[:user][:password]
     ).first
     token = JsonWebToken.encode(user_id: user.id)
-    present_user(user, token)
+    User::Decorator.new(user, token).to_h
   end
 
   def self.update(user, params)
     found_user = User.find(user[:user][:id]).first
     found_user.update(params[:user])
-    present_user(found_user, user[:user][:token])
+    User::Decorator.new(found_user, user[:user][:token]).to_h
   end
 
   def self.authorize!(env)
@@ -30,11 +30,18 @@ class User < Sequel::Model(Database.instance.conn)
       nil
     else
       user = find(decoded_token.user_id).first
-      present_user(user, token)
+      User::Decorator.new(user, token).to_h
     end
   end
 
-  def self.present_user(user, jwt)
-    Hash[:user, user.values.merge!(token: jwt)]
+  class Decorator
+    def initialize(user, token = nil)
+      @values = user.values
+      @token = token
+    end
+
+    def to_h
+      Hash[:user, @values.merge!(token: @token)]
+    end
   end
 end
