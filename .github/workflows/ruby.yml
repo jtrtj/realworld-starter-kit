@@ -36,5 +36,4 @@ jobs:
         DB_NAME: conduit
         DB_USER: postgres
         DB_PASSWORD: abc
-
-      run: bundle exec rspec
+      run: docker-compose run api rspec
