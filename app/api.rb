@@ -8,11 +8,15 @@ module Conduit
 
     helpers do
       def current_user
-        @current_user ||= User.authorize!(env)
+        @current_user ||= User.authorize!(token)
       end
 
       def authenticate!
         error!('401 Unauthorized', 402) unless current_user
+      end
+
+      def token
+        env['HTTP_AUTHORIZATION'].split[1]
       end
     end
 
@@ -45,7 +49,7 @@ module Conduit
       desc 'Get current user.'
       get do
         authenticate!
-        @current_user
+        User::Decorator.new(@current_user, token).to_h
       end
 
       desc 'Update a user.'
@@ -60,7 +64,8 @@ module Conduit
       end
       put do
         authenticate!
-        User.update(@current_user, params)
+        user = User.update(@current_user, params)
+        User::Decorator.new(user, token).to_h
       end
     end
   end
