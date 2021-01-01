@@ -1,4 +1,4 @@
-# ![RealWorld Example App](https://user-images.githubusercontent.com/62079009/102656503-3565d080-4131-11eb-96b1-d7c37e466951.png)
+# ![Grape RealWorld Example App Logo](logo.png)
 
 > ### [Grape](https://github.com/ruby-grape/grape) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
