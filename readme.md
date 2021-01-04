@@ -1,6 +1,8 @@
 # ![Grape RealWorld Example App Logo](logo.png)
 
-> ### [Grape](https://github.com/ruby-grape/grape) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
+#### *** Work in Progress - see [here](https://github.com/gothinkster/realworld/issues/589) for Issue opened on Realworld repo ***
+
+### This is a [Grape](https://github.com/ruby-grape/grape) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
 
 ### [Demo](https://github.com/gothinkster/realworld)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
@@ -13,16 +15,13 @@ For more information on how to this works with other frontends/backends, head ov
 
 # How it works
 
-> Describe the general architecture of your app here
+When complete, this app will adhere to all tests located in [this](https://github.com/gothinkster/realworld/blob/master/api/Conduit.postman_collection.json) Postman collection.
 
-# Getting started
-
-> npm install, npm start, etc.
-
-# Instructions while in developent:
+# Instructions while in developent to get the app working:
 1) `docker-compose build` to build the app, once it's cloned down.
 2) `docker-compose up -d` then `docker-compose run api sequel -m db/migrations postgres://postgres:abc@db:5432/conduit` to migrate the database
-3) `docker-compose up`
+3) `docker-compose up` then browse to your localhost to view the app.
+4) `docker-compose run api rspec` to run tests.
 
 If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls`
 
