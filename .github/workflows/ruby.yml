@@ -30,7 +30,7 @@ jobs:
         echo DB_PASSWORD=abc >> .env
         cat .env
     - name: Start app
-      run: docker-compose up --build
+      run: docker-compose up --build -d
     - name: Run migrations
       run: docker-compose run api rake db:migrate
     - name: Run tests
