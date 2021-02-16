@@ -29,6 +29,8 @@ jobs:
         echo DB_USER=postgres >> .env
         echo DB_PASSWORD=abc >> .env
         cat .env
+    - name: Start app
+      run: docker-compose up --build
     - name: Run migrations
       run: docker-compose run api rake db:migrate
     - name: Run tests
