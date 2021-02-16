@@ -30,6 +30,6 @@ jobs:
         echo DB_PASSWORD=abc >> .env
         cat .env
     - name: Run migrations
-      run: docker-compose run api sequel -m db/migrations postgres://postgres:abc@db:5432/conduit
+      run: docker-compose run api rake db:migrate
     - name: Run tests
       run: docker-compose run api rspec
