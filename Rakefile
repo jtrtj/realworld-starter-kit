@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Borrowed from https://gist.github.com/viking/1133150/255ae41ead3b2668542a2b3fe7ef7fea95742166
 
 namespace :bundler do
