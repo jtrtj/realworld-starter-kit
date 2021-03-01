@@ -6,7 +6,7 @@ module Decorator
     end
 
     def to_h
-      Hash[:user, @values.merge!(token: @token)]
+      { user: @values.merge!(token: @token) }
     end
   end
 end
