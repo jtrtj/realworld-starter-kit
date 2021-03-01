@@ -43,6 +43,12 @@ describe Conduit::API do
 
         expect(actual).to eq(expected)
       end
+
+      it 'returns 404 if user does not exist' do
+        get 'api/profiles/does_not_exist'
+
+        expect(last_response.status).to eq(404)
+      end
     end
   end
 end
