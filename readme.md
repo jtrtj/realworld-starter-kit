@@ -25,6 +25,11 @@ When complete, this app will adhere to all tests located in [this](https://githu
 
 If a migration is changed, stop the container then delete the volume that it is associated with `docker volume rm <volume_name>` - to find volumes `docker volume ls`
 
+# DB
+Rake tasks for setup/reset
+* `docker-compose run api rake db:migrate`
+* `docker-compose run api rake db:reset`
+
 # To get pry to work
 1) put pry in code where you want it to be & bring the server up with `docker-compose up` as above
 2) in a second terminal window than the one used to bring the app up, type `docker attach grape-realworld-example-app_api_1`
