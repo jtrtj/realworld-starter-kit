@@ -69,5 +69,14 @@ module Conduit
         Decorator::User.new(user, token).to_h
       end
     end
+
+    namespace 'profiles' do
+      desc "Get a user's profile."
+      get ':username' do
+        authenticate!
+        user = User.find(username: params[:username])
+        Decorator::Profile.new(user, @current_user).to_h
+      end
+    end
   end
 end
