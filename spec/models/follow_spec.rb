@@ -1,6 +1,6 @@
-require './app/models/follower'
+require './app/models/follow'
 
-describe Follower do
+describe Follow do
   context 'Class Methods' do
     before do
       @user = User.create(
@@ -24,11 +24,11 @@ describe Follower do
       end
     end
 
-    context '.following?' do
+    context '.exists?' do
       it 'Checks whether or not a user is following another user' do
         described_class.create_new(@following_user, @user)
-        following = described_class.following?(@following_user, @user)
-        not_following = described_class.following?(@user, @following_user)
+        following = described_class.exists?(follower: @following_user, user: @user)
+        not_following = described_class.exists?(follower: @user, user: @following_user)
         expect(following).to be true
         expect(not_following).to be false
       end

@@ -9,10 +9,10 @@ Sequel.migration do
       String :image
     end
 
-    create_table(:followers) do
+    create_table(:follows) do
       foreign_key :user_id, :users
       foreign_key :follower_id, :users
-      primary_key %i[user_id follower_id], name: :followers_pk
+      primary_key %i[user_id follower_id], name: :follows_pk
     end
   end
 end
