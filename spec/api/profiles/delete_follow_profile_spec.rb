@@ -24,6 +24,7 @@ describe Conduit::API do
         header 'Content-Type', 'application/json'
         header 'Authorization', "Token #{@token}"
       end
+
       it 'unfollows the user and returns profile of the unfollowed user' do
         post "api/profiles/#{@user.username}/follow"
         delete "api/profiles/#{@user.username}/follow"
@@ -41,6 +42,12 @@ describe Conduit::API do
         actual = JSON.parse(last_response.body)
 
         expect(actual).to eq(expected)
+      end
+
+      it 'returns 404 if user does not exist' do
+        delete 'api/profiles/does_not_exist/follow'
+
+        expect(last_response.status).to eq(404)
       end
     end
   end
