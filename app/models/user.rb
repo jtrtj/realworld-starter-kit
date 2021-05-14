@@ -1,5 +1,6 @@
 require './db/database'
 require './app/services/json_web_token'
+require './app/models/follow'
 
 class User < Sequel::Model(Database.instance.conn)
   def self.create_new(params)
@@ -29,5 +30,13 @@ class User < Sequel::Model(Database.instance.conn)
     else
       find(decoded_token.user_id).first
     end
+  end
+
+  def follow(user)
+    Follow.create_new(follower: self, user: user)
+  end
+
+  def unfollow(user)
+    Follow.with_pk([user.id, id]).delete
   end
 end

@@ -86,6 +86,36 @@ module Conduit
           status 404
         end
       end
+      desc 'Follow a user.'
+      post ':username/follow' do
+        authenticate!
+        user = User[username: params[:username]]
+        if user
+          follow = @current_user.follow(user)
+        else
+          status 404
+        end
+        if follow
+          Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
+      end
+      desc 'Unfollow a user.'
+      delete ':username/follow' do
+        authenticate!
+        user = User[username: params[:username]]
+        if user
+          follow = @current_user.unfollow(user)
+        else
+          status 404
+        end
+        if follow
+          Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
+      end
     end
   end
 end

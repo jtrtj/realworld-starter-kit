@@ -5,7 +5,7 @@ describe Conduit::API do
   def app
     OUTER_APP
   end
-  context 'POST /profiles/:username/follow' do
+  context 'DELETE /profiles/:username/follow' do
     context 'media-type: application/json' do
       before do
         @requesting_user = User.create(
@@ -24,8 +24,9 @@ describe Conduit::API do
         header 'Content-Type', 'application/json'
         header 'Authorization', "Token #{@token}"
       end
-      it 'follows the user and returns profile of the followed user' do
+      it 'unfollows the user and returns profile of the unfollowed user' do
         post "api/profiles/#{@user.username}/follow"
+        delete "api/profiles/#{@user.username}/follow"
 
         expected = {
           'profile' =>
@@ -33,7 +34,7 @@ describe Conduit::API do
               'username' => @user.username,
               'bio' => @user.bio,
               'image' => @user.image,
-              'following' => true
+              'following' => false
             }
         }
 
