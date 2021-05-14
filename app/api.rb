@@ -92,10 +92,6 @@ module Conduit
         user = User[username: params[:username]]
         if user
           follow = @current_user.follow(user)
-        else
-          status 404
-        end
-        if follow
           Decorator::Profile.new(user, @current_user).to_h
         else
           status 404
@@ -106,11 +102,7 @@ module Conduit
         authenticate!
         user = User[username: params[:username]]
         if user
-          follow = @current_user.unfollow(user)
-        else
-          status 404
-        end
-        if follow
+          @current_user.unfollow(user)
           Decorator::Profile.new(user, @current_user).to_h
         else
           status 404
