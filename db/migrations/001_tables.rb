@@ -14,5 +14,17 @@ Sequel.migration do
       foreign_key :follower_id, :users
       primary_key %i[user_id follower_id], name: :follows_pk
     end
+
+    create_table(:articles) do
+      primary_key :id
+      foreign_key :user_id, :users
+      String :slug
+      String :title
+      String :description
+      String :body, text: true
+      DateTime :created_at
+      DateTime :updated_at
+      index :slug
+    end
   end
 end

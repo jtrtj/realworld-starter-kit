@@ -29,7 +29,7 @@ namespace :db do
     env = args[:env] || 'development'
     Rake::Task['environment'].invoke(env)
     Database.instance.conn.tables.each do |table|
-      Database.instance.conn.run("DROP TABLE #{table}")
+      Database.instance.conn.run("DROP TABLE #{table} CASCADE")
     end
   end
 

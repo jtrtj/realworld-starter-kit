@@ -1,6 +1,7 @@
 require 'grape'
 require_relative 'models/user'
 require_relative 'decorators/user'
+require_relative 'decorators/profile'
 
 module Conduit
   class API < Grape::API
@@ -92,6 +93,8 @@ module Conduit
         user = User[username: params[:username]]
         if user
           follow = @current_user.follow(user)
+          status 200
+
           Decorator::Profile.new(user, @current_user).to_h
         else
           status 404
