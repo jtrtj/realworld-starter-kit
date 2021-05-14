@@ -8,5 +8,11 @@ Sequel.migration do
       String :bio
       String :image
     end
+
+    create_table(:follows) do
+      foreign_key :user_id, :users
+      foreign_key :follower_id, :users
+      primary_key %i[user_id follower_id], name: :follows_pk
+    end
   end
 end

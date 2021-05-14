@@ -23,6 +23,11 @@ services:
       - POSTGRES_PASSWORD=abc
     ports:
       - '5432:5432'
+  newman:
+    build:
+      context: ./spec/newman/
+    depends_on:
+      - api
 
 volumes:
   pg-data:

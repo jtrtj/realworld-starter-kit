@@ -16,8 +16,13 @@ module Conduit
         error!('401 Unauthorized', 402) unless current_user
       end
 
+      def optional_auth
+        token ? authenticate! : @current_user = nil
+      end
+
       def token
-        env['HTTP_AUTHORIZATION'].split[1]
+        token = env['HTTP_AUTHORIZATION']
+        token.nil? ? token : token.split[1]
       end
     end
 
@@ -67,6 +72,41 @@ module Conduit
         authenticate!
         user = User.update(@current_user, params)
         Decorator::User.new(user, token).to_h
+      end
+    end
+
+    namespace 'profiles' do
+      desc "Get a user's profile."
+      get ':username' do
+        optional_auth
+        user = User[username: params[:username]]
+        if user
+          Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
+      end
+      desc 'Follow a user.'
+      post ':username/follow' do
+        authenticate!
+        user = User[username: params[:username]]
+        if user
+          follow = @current_user.follow(user)
+          Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
+      end
+      desc 'Unfollow a user.'
+      delete ':username/follow' do
+        authenticate!
+        user = User[username: params[:username]]
+        if user
+          @current_user.unfollow(user)
+          Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
       end
     end
   end
