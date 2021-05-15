@@ -11,6 +11,7 @@ gem 'sequel' # Database
 
 group :development, :test do
   gem 'database_cleaner-sequel'
+  gem 'faker'
   gem 'pry'
   gem 'rack-test'
   gem 'rspec'

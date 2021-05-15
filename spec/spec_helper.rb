@@ -4,6 +4,7 @@ require_relative '../app/api'
 
 require 'rack/test'
 require 'database_cleaner-sequel'
+require 'faker'
 
 OUTER_APP = Rack::Builder.parse_file('config.ru').first
 

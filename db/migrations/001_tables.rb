@@ -26,5 +26,16 @@ Sequel.migration do
       DateTime :updated_at
       index :slug
     end
+
+    create_table(:tags) do
+      primary_key :id
+      String :name
+      index :name
+    end
+
+    create_table(:tag_mappings) do
+      foreign_key :article_id, :articles
+      foreign_key :tag_id, :tags
+    end
   end
 end

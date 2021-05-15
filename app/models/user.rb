@@ -3,6 +3,8 @@ require './app/services/json_web_token'
 require './app/models/follow'
 
 class User < Sequel::Model(Database.instance.conn)
+  one_to_many :article
+
   def self.create_new(params)
     user = create(params[:user])
     token = JsonWebToken.encode(user_id: user.id)
