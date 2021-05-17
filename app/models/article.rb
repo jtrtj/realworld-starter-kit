@@ -17,8 +17,8 @@ class Article < Sequel::Model(Database.instance.conn)
     article
   end
 
-  def before_save
-    self.slug = sluggify(title)
+  def after_save
+    self.slug = sluggify(title) + "-#{id}"
     super
   end
 
@@ -42,6 +42,10 @@ class Article < Sequel::Model(Database.instance.conn)
   private
 
   def sluggify(title)
-    title.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+    title
+      .downcase
+      .strip
+      .gsub(' ', '-')
+      .gsub(/[^\w-]/, '')
   end
 end

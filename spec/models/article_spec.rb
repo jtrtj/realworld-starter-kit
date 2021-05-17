@@ -34,15 +34,15 @@ describe Article do
     end
   end
   context 'Instance Methods' do
-    context '#before_save' do
-      it 'Creates slug from title when creating and updating' do
+    context '#after_save' do
+      it 'Creates slug from title and id when creating and updating' do
         article = Article.create(title: 'This is cool!')
 
-        expect(article.slug).to eq('this-is-cool')
+        expect(article.slug).to eq("this-is-cool-#{article.id}")
 
         article.update(title: 'This was cool?')
 
-        expect(article.slug).to eq('this-was-cool')
+        expect(article.slug).to eq("this-was-cool-#{article.id}")
       end
     end
 
