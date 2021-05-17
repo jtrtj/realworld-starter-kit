@@ -2,8 +2,25 @@ require './app/models/article'
 
 describe Article do
   context 'Class Methods' do
-    context '.process_tags' do
-      it 'Given a tagList, creates tags and article_tags if they do not all ready exist' do
+    context '.create_new' do
+      it 'Creates a new article and processes its tags' do
+        params = {
+          article: {
+            title: 'How to train your dragon',
+            description: 'Ever wonder how?',
+            body: 'You have to believe',
+            tagList: %w[reactjs angularjs dragons]
+          }
+        }
+        existing_tag = Tag.create(name: 'reactjs')
+        expect(Tag.count).to eq(1)
+
+        article = Article.create_new(params)
+
+        expect(article.title).to eq(params[:article][:title])
+        expect(article.description).to eq(params[:article][:description])
+        expect(article.body).to eq(params[:article][:body])
+        expect(article.tag_list).to eq(params[:article][:tagList])
       end
     end
   end
