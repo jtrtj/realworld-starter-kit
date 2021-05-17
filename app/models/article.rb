@@ -7,8 +7,12 @@ class Article < Sequel::Model(Database.instance.conn)
   many_to_one :user
   many_to_many :tags, join_table: :tag_mappings
 
-  def self.create_new(params)
-    article = Article.create(params[:article].except(:tagList))
+  def self.create_new(params, user)
+    article = Article.create(
+      params[:article]
+      .except(:tagList)
+      .merge({ user: user })
+    )
     article&.process_tags(params[:article][:tagList])
     article
   end

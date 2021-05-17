@@ -4,6 +4,12 @@ describe Article do
   context 'Class Methods' do
     context '.create_new' do
       it 'Creates a new article and processes its tags' do
+        user = User.create(
+          email: Faker::Internet.email,
+          username: Faker::Internet.username,
+          password: Faker::Internet.password
+        )
+
         params = {
           article: {
             title: 'How to train your dragon',
@@ -15,12 +21,15 @@ describe Article do
         existing_tag = Tag.create(name: 'reactjs')
         expect(Tag.count).to eq(1)
 
-        article = Article.create_new(params)
+        article = Article.create_new(params, user)
 
         expect(article.title).to eq(params[:article][:title])
         expect(article.description).to eq(params[:article][:description])
         expect(article.body).to eq(params[:article][:body])
         expect(article.tag_list).to eq(params[:article][:tagList])
+        expect(article.user).to eq(user)
+        # Tags should not be duplicated
+        expect(Tag.count).to eq(3)
       end
     end
   end
