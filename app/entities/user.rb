@@ -6,14 +6,14 @@ module Conduit
       expose :username
       expose :bio
       expose :image
-      expose :following, if: ->(_user, options) { options[:type] == :author }
+      expose :following
 
       private
 
       def following
         requesting_user = options[:requesting_user]
         if requesting_user
-          requesting_user.following?(user: object)
+          requesting_user.following?(object)
         else
           false
         end

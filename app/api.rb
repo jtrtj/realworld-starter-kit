@@ -4,6 +4,7 @@ require_relative 'models/article'
 require_relative 'entities/article'
 require_relative 'decorators/user'
 require_relative 'decorators/profile'
+require_relative 'entities/profile'
 
 module Conduit
   class API < Grape::API
@@ -84,7 +85,8 @@ module Conduit
         optional_auth
         user = User[username: params[:username]]
         if user
-          Decorator::Profile.new(user, @current_user).to_h
+          present user, with: Entities::Profile, user: @current_user
+          # Decorator::Profile.new(user, @current_user).to_h
         else
           status 404
         end
