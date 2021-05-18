@@ -86,7 +86,6 @@ module Conduit
         user = User[username: params[:username]]
         if user
           present user, with: Entities::Profile, user: @current_user
-          # Decorator::Profile.new(user, @current_user).to_h
         else
           status 404
         end
@@ -98,8 +97,7 @@ module Conduit
         if user
           follow = @current_user.follow(user)
           status 200
-
-          Decorator::Profile.new(user, @current_user).to_h
+          present user, with: Entities::Profile, user: @current_user
         else
           status 404
         end
@@ -110,7 +108,7 @@ module Conduit
         user = User[username: params[:username]]
         if user
           @current_user.unfollow(user)
-          Decorator::Profile.new(user, @current_user).to_h
+          present user, with: Entities::Profile, user: @current_user
         else
           status 404
         end
