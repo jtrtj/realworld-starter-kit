@@ -41,4 +41,8 @@ class User < Sequel::Model(Database.instance.conn)
   def unfollow(user)
     Follow.with_pk([user.id, id]).delete
   end
+
+  def following?(user)
+    Follow.exists?(follower: self, user: user)
+  end
 end

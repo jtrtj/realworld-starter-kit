@@ -1,20 +1,22 @@
 require './db/database'
 require_relative 'tag'
 require_relative 'tagmapping'
+require_relative 'favorite'
 
 class Article < Sequel::Model(Database.instance.conn)
   plugin :timestamps
   many_to_one :user
   many_to_many :tags, join_table: :tag_mappings
+  one_to_many :favorites
 
   def self.create_new(params, user)
-    article = Article.create(
+    article = create(
       params[:article]
       .except(:tagList)
       .merge({ user: user })
     )
     article&.process_tags(params[:article][:tagList])
-    article
+    article.save
   end
 
   def after_save
@@ -37,6 +39,14 @@ class Article < Sequel::Model(Database.instance.conn)
       tag = Tag.find_or_create(name: tag_name)
       TagMapping.find_or_create(tag: tag, article: self) if tag
     end
+  end
+
+  def favorites_count
+    favorites.count
+  end
+
+  def favorited(user)
+    Favorite.exists?(article: self, user: user)
   end
 
   private

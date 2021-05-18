@@ -1,5 +1,7 @@
 require 'grape'
 require_relative 'models/user'
+require_relative 'models/article'
+require_relative 'entities/article'
 require_relative 'decorators/user'
 require_relative 'decorators/profile'
 
@@ -107,6 +109,20 @@ module Conduit
         if user
           @current_user.unfollow(user)
           Decorator::Profile.new(user, @current_user).to_h
+        else
+          status 404
+        end
+      end
+    end
+
+    namespace 'articles' do
+      desc 'Get a single article.'
+      get ':slug' do
+        optional_auth
+
+        article = Article[slug: params[:slug]]
+        if article
+          present article, with: Entities::Article, user: @current_user
         else
           status 404
         end

@@ -37,5 +37,11 @@ Sequel.migration do
       foreign_key :article_id, :articles
       foreign_key :tag_id, :tags
     end
+
+    create_table(:favorites) do
+      foreign_key :article_id, :articles
+      foreign_key :user_id, :users
+      primary_key %i[article_id user_id], name: :favorites_pk
+    end
   end
 end
