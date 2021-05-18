@@ -49,8 +49,6 @@ class Article < Sequel::Model(Database.instance.conn)
     Favorite.exists?(article: self, user: user)
   end
 
-  private
-
   def sluggify(title)
     title
       .downcase

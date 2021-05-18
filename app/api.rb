@@ -144,6 +144,24 @@ module Conduit
           status 400
         end
       end
+      desc 'Update an article.'
+      put ':slug' do
+        authenticate!
+        params do
+          requires :article, type: Hash do
+            optional :title, type: String
+            optional :description, type: String
+            optional :body, type: String
+          end
+        end
+        article = Article[slug: params[:slug]]
+        if article && article.user == @current_user
+          article.update(params[:article])
+          present article, with: Entities::Article, user: @current_user
+        else
+          status 404
+        end
+      end
     end
   end
 end
