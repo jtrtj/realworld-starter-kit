@@ -43,9 +43,6 @@ describe Conduit::API do
         }
       }
 
-      header 'Content-Type', 'application/json'
-      header 'Authorization', "Token #{@token}"
-
       get "api/articles/#{article.slug}"
 
       actual = JSON.parse(last_response.body)

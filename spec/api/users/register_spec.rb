@@ -9,12 +9,11 @@ describe Conduit::API do
     context 'media-type: application/json' do
       it 'returns the new User' do
         request_body = {
-          user:
-                   {
-                     email: 'cool@guy.org',
-                     password: 'ssssecret',
-                     username: 'coolDude'
-                   }
+          user: {
+            email: 'cool@guy.org',
+            password: 'ssssecret',
+            username: 'coolDude'
+          }
         }
 
         post 'api/users', request_body

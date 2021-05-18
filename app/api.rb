@@ -126,6 +126,24 @@ module Conduit
           status 404
         end
       end
+      desc 'Create a new article.'
+      post do
+        authenticate!
+        params do
+          requires :article, type: Hash do
+            requires :title, type: String
+            requires :description, type: String
+            requires :body, type: String
+            optional :tagList, type: Array[String]
+          end
+        end
+        article = Article.create_new(params, @current_user)
+        if article
+          present article, with: Entities::Article, user: @current_user
+        else
+          status 400
+        end
+      end
     end
   end
 end
