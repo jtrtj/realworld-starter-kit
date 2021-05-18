@@ -34,12 +34,12 @@ Sequel.migration do
     end
 
     create_table(:tag_mappings) do
-      foreign_key :article_id, :articles
-      foreign_key :tag_id, :tags
+      foreign_key :article_id, :articles, on_delete: :cascade
+      foreign_key :tag_id, :tags, on_delete: :cascade
     end
 
     create_table(:favorites) do
-      foreign_key :article_id, :articles
+      foreign_key :article_id, :articles, on_delete: :cascade
       foreign_key :user_id, :users
       primary_key %i[article_id user_id], name: :favorites_pk
     end

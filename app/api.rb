@@ -162,6 +162,16 @@ module Conduit
           status 404
         end
       end
+      desc 'Delete an article.'
+      delete ':slug' do
+        authenticate!
+        article = Article[slug: params[:slug]]
+        if article && article.user == @current_user
+          article.delete
+        else
+          status 404
+        end
+      end
     end
   end
 end
