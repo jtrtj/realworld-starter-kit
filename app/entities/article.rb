@@ -12,7 +12,7 @@ module Conduit
         expose :favorites_count, as: :favoritesCount
         expose :favorited
         expose :user, as: :author do |article, options|
-          Conduit::Entities::User.represent(article.user, requesting_user: options[:user], type: :author)
+          Conduit::Entities::User.represent(article.user, requesting_user: options[:user])
         end
 
         private

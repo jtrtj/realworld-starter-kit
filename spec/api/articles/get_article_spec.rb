@@ -30,8 +30,8 @@ describe Conduit::API do
           'description' => article.description,
           'body' => article.body,
           'tagList' => article.tag_list,
-          'createdAt' => article.created_at.strftime('%Y-%m-%d %I:%M:%S %z'),
-          'updatedAt' => article.updated_at.strftime('%Y-%m-%d %I:%M:%S %z'),
+          'createdAt' => article.created_at.strftime('%Y-%m-%d %H:%M:%S %z'),
+          'updatedAt' => article.updated_at.strftime('%Y-%m-%d %H:%M:%S %z'),
           'favorited' => false,
           'favoritesCount' => 0,
           'author' => {

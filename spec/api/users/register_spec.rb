@@ -7,13 +7,15 @@ describe Conduit::API do
   end
   context 'POST /users' do
     context 'media-type: application/json' do
-      it 'returns a the current User' do
-        request_body = { 'user':
+      it 'returns the new User' do
+        request_body = {
+          user:
                    {
-                     'email': 'cool@guy.org',
-                     'password': 'ssssecret',
-                     'username': 'coolDude'
-                   } }
+                     email: 'cool@guy.org',
+                     password: 'ssssecret',
+                     username: 'coolDude'
+                   }
+        }
 
         post 'api/users', request_body
 

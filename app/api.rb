@@ -3,7 +3,6 @@ require_relative 'models/user'
 require_relative 'models/article'
 require_relative 'entities/article'
 require_relative 'decorators/user'
-require_relative 'decorators/profile'
 require_relative 'entities/profile'
 
 module Conduit
