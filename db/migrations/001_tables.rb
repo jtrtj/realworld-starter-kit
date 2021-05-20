@@ -43,5 +43,14 @@ Sequel.migration do
       foreign_key :user_id, :users
       primary_key %i[article_id user_id], name: :favorites_pk
     end
+
+    create_table(:comments) do
+      primary_key :id
+      foreign_key :user_id, :users
+      foreign_key :article_id, :articles, on_delete: :cascade
+      String :body, text: true
+      DateTime :created_at
+      DateTime :updated_at
+    end
   end
 end

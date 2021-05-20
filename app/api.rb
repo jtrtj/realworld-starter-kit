@@ -4,6 +4,7 @@ require_relative 'models/article'
 require_relative 'entities/article'
 require_relative 'decorators/user'
 require_relative 'entities/profile'
+require_relative 'entities/comment'
 
 module Conduit
   class API < Grape::API
@@ -168,6 +169,40 @@ module Conduit
         article = Article[slug: params[:slug]]
         if article && article.user == @current_user
           article.delete
+        else
+          status 404
+        end
+      end
+      desc 'Post a comment on an article.'
+      post ':slug/comments' do
+        authenticate!
+
+        article = Article[slug: params[:slug]]
+        if article
+          comment = @current_user.comment(article, params[:comment])
+          present comment, with: Entities::Comment, user: @current_user
+        else
+          status 404
+        end
+      end
+      desc "Get an article's comments."
+      get ':slug/comments' do
+        optional_auth
+
+        article = Article[slug: params[:slug]]
+        if article
+          present article.comments, with: Entities::Comment, user: @current_user
+        else
+          status 404
+        end
+      end
+      desc "Delete an article's comment."
+      delete ':slug/comments/:id' do
+        authenticate!
+
+        comment = Comment[params[:id]]
+        if comment && comment.user == @current_user
+          comment.delete
         else
           status 404
         end

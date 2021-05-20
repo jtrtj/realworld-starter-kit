@@ -1,9 +1,11 @@
 require './db/database'
 require './app/services/json_web_token'
 require './app/models/follow'
+require './app/models/comment'
 
 class User < Sequel::Model(Database.instance.conn)
-  one_to_many :article
+  one_to_many :articles
+  one_to_many :comments
 
   def self.create_new(params)
     user = create(params[:user])
@@ -44,5 +46,9 @@ class User < Sequel::Model(Database.instance.conn)
 
   def following?(user)
     Follow.exists?(follower: self, user: user)
+  end
+
+  def comment(article, params)
+    Comment.create(user: self, article: article, body: params[:body])
   end
 end

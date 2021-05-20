@@ -8,6 +8,7 @@ class Article < Sequel::Model(Database.instance.conn)
   many_to_one :user
   many_to_many :tags, join_table: :tag_mappings
   one_to_many :favorites
+  one_to_many :comments
 
   def self.create_new(params, user)
     article = create(
