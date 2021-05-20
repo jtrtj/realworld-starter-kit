@@ -219,6 +219,19 @@ module Conduit
           status 404
         end
       end
+      desc 'Unfavorite an article.'
+      delete ':slug/favorite' do
+        authenticate!
+
+        article = Article[slug: params[:slug]]
+        favorite = Favorite[user: @current_user, article: article]
+        if favorite
+          favorite.delete
+          present article, with: Entities::Article, user: @current_user
+        else
+          status 404
+        end
+      end
     end
   end
 end
