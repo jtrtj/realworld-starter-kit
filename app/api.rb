@@ -207,6 +207,18 @@ module Conduit
           status 404
         end
       end
+      desc 'Favorite an article.'
+      post ':slug/favorite' do
+        authenticate!
+
+        article = Article[slug: params[:slug]]
+        if article
+          @current_user.favorite(article)
+          present article, with: Entities::Article, user: @current_user
+        else
+          status 404
+        end
+      end
     end
   end
 end

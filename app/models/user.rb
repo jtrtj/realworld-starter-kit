@@ -6,6 +6,7 @@ require './app/models/comment'
 class User < Sequel::Model(Database.instance.conn)
   one_to_many :articles
   one_to_many :comments
+  one_to_many :favorites
 
   def self.create_new(params)
     user = create(params[:user])
@@ -50,5 +51,9 @@ class User < Sequel::Model(Database.instance.conn)
 
   def comment(article, params)
     Comment.create(user: self, article: article, body: params[:body])
+  end
+
+  def favorite(article)
+    Favorite.create(article: article, user: self)
   end
 end
