@@ -233,5 +233,11 @@ module Conduit
         end
       end
     end
+    namespace 'tags' do
+      desc 'Get all tags'
+      get '/' do
+        { tags: Tag.all.map(&:name) }
+      end
+    end
   end
 end
