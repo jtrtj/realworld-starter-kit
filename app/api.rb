@@ -40,7 +40,7 @@ module Conduit
         end
       end
       post do
-        User.create_new(params)
+        User.create_new(declared(params))
       end
 
       desc 'Login a user.'
@@ -51,7 +51,7 @@ module Conduit
         end
       end
       post '/login' do
-        User.login(params)
+        User.login(declared(params))
       end
     end
 
@@ -74,7 +74,7 @@ module Conduit
       end
       put do
         authenticate!
-        user = User.update(@current_user, params)
+        user = User.update(@current_user, declared(params, include_missing: false))
         Decorator::User.new(user, token).to_h
       end
     end
@@ -116,6 +116,12 @@ module Conduit
     end
 
     namespace 'articles' do
+      desc 'List articles'
+      get '/' do
+        optional_auth
+        present Article.list(params), with: Entities::Article, user: @current_user
+      end
+
       desc 'Get a single article.'
       get ':slug' do
         optional_auth
@@ -138,7 +144,7 @@ module Conduit
             optional :tagList, type: Array[String]
           end
         end
-        article = Article.create_new(params, @current_user)
+        article = Article.create_new(declared(params), @current_user)
         if article
           present article, with: Entities::Article, user: @current_user
         else
@@ -233,6 +239,7 @@ module Conduit
         end
       end
     end
+
     namespace 'tags' do
       desc 'Get all tags'
       get '/' do
