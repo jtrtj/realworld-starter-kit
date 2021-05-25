@@ -32,26 +32,26 @@ module Conduit
 
     namespace 'users' do
       desc 'Create a new user.'
-      params do
-        requires :user, type: Hash do
-          requires :username, type: String
-          requires :email, type: String
-          requires :password, type: String
-        end
-      end
       post do
-        User.create_new(declared(params))
+        params do
+          requires :user, type: Hash do
+            requires :username, type: String
+            requires :email, type: String
+            requires :password, type: String
+          end
+        end
+        User.create_new(params)
       end
 
       desc 'Login a user.'
-      params do
-        requires :user, type: Hash do
-          requires :email, type: String
-          requires :password, type: String
-        end
-      end
       post '/login' do
-        User.login(declared(params))
+        params do
+          requires :user, type: Hash do
+            requires :email, type: String
+            requires :password, type: String
+          end
+        end
+        User.login(params)
       end
     end
 
@@ -63,18 +63,20 @@ module Conduit
       end
 
       desc 'Update a user.'
-      params do
-        requires :user, type: Hash do
-          optional :email, type: String
-          optional :username, type: String
-          optional :image, type: String
-          optional :bio, type: String
-          optional :password, type: String
-        end
-      end
       put do
         authenticate!
-        user = User.update(@current_user, declared(params, include_missing: false))
+
+        params do
+          requires :user, type: Hash do
+            optional :email, type: String
+            optional :username, type: String
+            optional :image, type: String
+            optional :bio, type: String
+            optional :password, type: String
+          end
+        end
+
+        user = User.update(@current_user, params)
         Decorator::User.new(user, token).to_h
       end
     end
@@ -117,15 +119,19 @@ module Conduit
 
     namespace 'articles' do
       desc 'List articles'
-      get '/' do
+      get  do
         optional_auth
-        present Article.list(params), with: Entities::Article, user: @current_user
+
+        params do
+          optional :limit, type: Integer, default: 20
+        end
+        list = Entities::Article.represent(Article.list(params), user: @current_user)
+        list.merge!(articlesCount: Article.count)
       end
 
       desc 'Get a single article.'
       get ':slug' do
         optional_auth
-
         article = Article[slug: params[:slug]]
         if article
           present article, with: Entities::Article, user: @current_user
@@ -141,10 +147,10 @@ module Conduit
             requires :title, type: String
             requires :description, type: String
             requires :body, type: String
-            optional :tagList, type: Array[String]
+            optional :tagList, type: Array
           end
         end
-        article = Article.create_new(declared(params), @current_user)
+        article = Article.create_new(params, @current_user)
         if article
           present article, with: Entities::Article, user: @current_user
         else
