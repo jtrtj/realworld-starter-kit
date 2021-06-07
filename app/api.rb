@@ -119,11 +119,11 @@ module Conduit
 
     namespace 'articles' do
       desc 'List articles'
-      get  do
+      get do
         optional_auth
 
         params do
-          optional :limit, type: Integer, default: 20
+          optional :limit, type: Integer
         end
         list = Entities::Article.represent(Article.list(params), user: @current_user)
         list.merge!(articlesCount: Article.count)

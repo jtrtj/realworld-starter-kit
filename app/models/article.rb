@@ -20,6 +20,15 @@ class Article < Sequel::Model(Database.instance.conn)
     article.save
   end
 
+  def self.list(params)
+    # can't get deault params working with grape
+    params[:limit] = 20 if params[:limit].nil?
+
+    limit(params[:limit], params[:offset])
+      .order(Sequel.desc(:created_at))
+      .all
+  end
+
   def after_save
     self.slug = sluggify(title) + "-#{id}"
     super

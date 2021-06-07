@@ -16,7 +16,8 @@ describe Conduit::API do
           }
         }
 
-        post 'api/users', request_body
+        header 'Content-Type', 'application/json'
+        post 'api/users', JSON.generate(request_body)
 
         response_body = JSON.parse(last_response.body)
         new_user = User.find(response_body['user']['id']).first
