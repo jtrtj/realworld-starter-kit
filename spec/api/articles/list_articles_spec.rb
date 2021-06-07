@@ -58,5 +58,36 @@ describe Conduit::API do
       expect(actual['articles'].count).to eq(1)
       expect(actual['articles'][0]['slug']).to eq(article_with_tag.slug)
     end
+
+    it 'Articles can be filtered by author' do
+      different_user = User.create(
+        email: Faker::Internet.email,
+        username: Faker::Internet.username,
+        password: Faker::Internet.password
+      )
+
+      users_articles_count = 5
+
+      users_articles_count.times do
+        article_params = {
+          article: {
+            title: Faker::Marketing.buzzwords,
+            description: Faker::Lorem.sentence,
+            body: Faker::Lorem.sentence,
+            tagList: %w[AngularJS typescript]
+          }
+        }
+        Article.create_new(article_params, different_user)
+      end
+
+      get "api/articles?author=#{different_user.username}"
+
+      actual = JSON.parse(last_response.body)
+
+      expect(actual['articles'].count).to eq(users_articles_count)
+      actual['articles'].each do |article|
+        expect(article['author']['username']).to eq(different_user.username)
+      end
+    end
   end
 end

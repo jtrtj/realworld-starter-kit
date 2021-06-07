@@ -25,6 +25,8 @@ class Article < Sequel::Model(Database.instance.conn)
     params[:limit] = 20 if params[:limit].nil?
     if params[:tag]
       filter_by_tag(params) if params[:tag]
+    elsif params[:author]
+      filter_by_author(params)
     else
       limit(params[:limit], params[:offset])
         .order(Sequel.desc(:created_at))
@@ -35,6 +37,14 @@ class Article < Sequel::Model(Database.instance.conn)
   def self.filter_by_tag(params)
     tag = Tag.find(name: params[:tag])
     where(tags: tag)
+      .limit(params[:limit], params[:offset])
+      .order(Sequel.desc(:created_at))
+      .all
+  end
+
+  def self.filter_by_author(params)
+    author = User.find(username: params[:author])
+    where(user: author)
       .limit(params[:limit], params[:offset])
       .order(Sequel.desc(:created_at))
       .all
