@@ -21,9 +21,6 @@ class Article < Sequel::Model(Database.instance.conn)
   end
 
   def self.list(params)
-    # can't get deault params working with grape
-    params[:limit] = 20 if params[:limit].nil?
-
     order(Sequel.desc(:created_at))
       .limit(params[:limit], params[:offset])
       .all
