@@ -23,19 +23,16 @@ class Article < Sequel::Model(Database.instance.conn)
   def self.list(params)
     # can't get deault params working with grape
     params[:limit] = 20 if params[:limit].nil?
-    if params[:tag]
-      filter_by_tag(params) if params[:tag]
-    elsif params[:author]
-      filter_by_author(params)
-    else
-      limit(params[:limit], params[:offset])
-        .order(Sequel.desc(:created_at))
-        .all
-    end
+
+    order(Sequel.desc(:created_at))
+      .limit(params[:limit], params[:offset])
+      .all
   end
 
   def self.filter_by_tag(params)
     tag = Tag.find(name: params[:tag])
+    return [] unless tag
+
     where(tags: tag)
       .limit(params[:limit], params[:offset])
       .order(Sequel.desc(:created_at))
@@ -44,7 +41,19 @@ class Article < Sequel::Model(Database.instance.conn)
 
   def self.filter_by_author(params)
     author = User.find(username: params[:author])
+    return [] unless author
+
     where(user: author)
+      .limit(params[:limit], params[:offset])
+      .order(Sequel.desc(:created_at))
+      .all
+  end
+
+  def self.filter_by_favorited(params)
+    user = User.find(username: params[:favorited])
+    return [] unless user
+
+    join(Favorite.where(user_id: user.id), article_id: :id)
       .limit(params[:limit], params[:offset])
       .order(Sequel.desc(:created_at))
       .all

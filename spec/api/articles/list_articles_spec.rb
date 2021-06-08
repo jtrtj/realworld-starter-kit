@@ -89,5 +89,25 @@ describe Conduit::API do
         expect(article['author']['username']).to eq(different_user.username)
       end
     end
+
+    it "Articles can be filtered by a user's favorited status" do
+      different_user = User.create(
+        email: Faker::Internet.email,
+        username: Faker::Internet.username,
+        password: Faker::Internet.password
+      )
+
+      user_favorites_count = 5
+
+      Article.limit(user_favorites_count).all.each do |article|
+        different_user.favorite(article)
+      end
+
+      get "api/articles?favorited=#{different_user.username}"
+
+      actual = JSON.parse(last_response.body)
+
+      expect(actual['articles'].count).to eq(user_favorites_count)
+    end
   end
 end

@@ -125,8 +125,20 @@ module Conduit
         params do
           optional :limit, type: Integer
         end
-        list = Entities::Article.represent(Article.list(params), user: @current_user)
-        list.merge!(articlesCount: Article.count)
+
+        list = case params
+               when ->(params) { params.key?(:tag) }
+                 Article.filter_by_tag(params)
+               when ->(params) { params.key?(:author) }
+                 Article.filter_by_author(params)
+               when ->(params) { params.key?(:favorited) }
+                 Article.filter_by_favorited(params)
+               else
+                 Article.list(params)
+               end
+
+        response = Entities::Article.represent(list, user: @current_user)
+        response.merge!(articlesCount: Article.count)
       end
 
       desc 'Get a single article.'
