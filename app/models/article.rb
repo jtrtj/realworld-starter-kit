@@ -22,7 +22,7 @@ class Article < Sequel::Model(Database.instance.conn)
 
   def self.list(params)
     order(Sequel.desc(:created_at))
-      .limit(params[:limit], params[:offset])
+      .limit(params.fetch(:limit, 20), params.fetch(:offset, 0))
       .all
   end
 
@@ -31,7 +31,7 @@ class Article < Sequel::Model(Database.instance.conn)
     return [] unless tag
 
     where(tags: tag)
-      .limit(params[:limit], params[:offset])
+      .limit(params.fetch(:limit, 20), params.fetch(:offset, 0))
       .order(Sequel.desc(:created_at))
       .all
   end
@@ -41,7 +41,7 @@ class Article < Sequel::Model(Database.instance.conn)
     return [] unless author
 
     where(user: author)
-      .limit(params[:limit], params[:offset])
+      .limit(params.fetch(:limit, 20), params.fetch(:offset, 0))
       .order(Sequel.desc(:created_at))
       .all
   end
@@ -51,7 +51,7 @@ class Article < Sequel::Model(Database.instance.conn)
     return [] unless user
 
     join(Favorite.where(user_id: user.id), article_id: :id)
-      .limit(params[:limit], params[:offset])
+      .limit(params.fetch(:limit, 20), params.fetch(:offset, 0))
       .order(Sequel.desc(:created_at))
       .all
   end

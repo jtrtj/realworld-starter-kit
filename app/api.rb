@@ -124,14 +124,12 @@ module Conduit
 
         params do
           optional :limit, type: Integer
+          optional :offset, type: Integer
           optional :tag, type: String
           optional :author, type: String
           optional :favorited, type: String
           exactly_one_of :tag, :author, :favorited
         end
-
-        # can't get deault params working with
-        params[:limit] = 20 if params[:limit].nil?
 
         list = case params
                when ->(params) { params.key?(:tag) }

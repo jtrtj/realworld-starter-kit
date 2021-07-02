@@ -46,7 +46,7 @@ describe Conduit::API do
       get "api/articles/#{article.slug}"
 
       actual = JSON.parse(last_response.body)
-
+      binding.pry
       expect(actual).to eq(expected)
     end
   end

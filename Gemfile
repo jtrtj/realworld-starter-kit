@@ -9,6 +9,7 @@ gem 'grape-entity'
 gem 'jwt'
 gem 'pg' # Database
 gem 'sequel' # Database
+gem 'webrick' # doesn't ship with ruby 3
 
 group :development, :test do
   gem 'database_cleaner-sequel'
