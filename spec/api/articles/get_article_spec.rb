@@ -30,8 +30,8 @@ describe Conduit::API do
           'description' => article.description,
           'body' => article.body,
           'tagList' => article.tag_list,
-          'createdAt' => article.created_at.strftime('%Y-%m-%d %H:%M:%S %z'),
-          'updatedAt' => article.updated_at.strftime('%Y-%m-%d %H:%M:%S %z'),
+          'createdAt' => article.created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
+          'updatedAt' => article.updated_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
           'favorited' => false,
           'favoritesCount' => 0,
           'author' => {
@@ -42,11 +42,9 @@ describe Conduit::API do
           }
         }
       }
-
       get "api/articles/#{article.slug}"
 
       actual = JSON.parse(last_response.body)
-      binding.pry
       expect(actual).to eq(expected)
     end
   end
