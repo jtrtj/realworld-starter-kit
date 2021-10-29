@@ -72,5 +72,16 @@ describe Conduit::API do
       expect(actual['articlesCount']).to eq(22)
       expect(actual['articles'][0]['createdAt']).to be > actual['articles'][6]['createdAt']
     end
+
+    it 'Returns most recent articles written by followed users with limit and offset' do
+      limit = 10
+      get "api/articles/feed?limit=#{limit}&offset=0"
+
+      actual = JSON.parse(last_response.body)
+
+      expect(actual['articles'].count).to eq(limit)
+      expect(actual['articlesCount']).to eq(22)
+      expect(actual['articles'][0]['createdAt']).to be > actual['articles'][6]['createdAt']
+    end
   end
 end
