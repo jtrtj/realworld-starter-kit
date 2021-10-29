@@ -146,6 +146,20 @@ module Conduit
         response.merge!(articlesCount: Article.count)
       end
 
+      desc 'Articles feed'
+      get 'feed' do
+        authenticate!
+
+        params do
+          optional :limit, type: Integer
+          optional :offset, type: Integer
+        end
+
+        feed = Article.feed(params, @current_user)
+        response = Entities::Article.represent(feed, user: @current_user)
+        response.merge!(articlesCount: Article.count)
+      end
+
       desc 'Get a single article.'
       get ':slug' do
         optional_auth

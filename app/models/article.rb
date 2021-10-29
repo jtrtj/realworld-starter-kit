@@ -56,6 +56,14 @@ class Article < Sequel::Model(Database.instance.conn)
       .all
   end
 
+  def self.feed(params, requesting_user)
+    Article.join(:follows, user_id: :user_id)
+           .where(follower_id: requesting_user.id)
+           .order(Sequel.desc(:created_at))
+           .limit(params.fetch(:limit, 20), params.fetch(:offset, 0))
+           .all
+  end
+
   def after_save
     self.slug = sluggify(title) + "-#{id}"
     super
